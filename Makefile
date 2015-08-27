@@ -298,7 +298,7 @@ BINARYTAR=$(BINARYNAME).tar
 XZ=$(shell which xz > /dev/null 2>&1; echo $$?)
 XZ_COMPRESSION ?= 9
 PKG=$(TARNAME).pkg
-PACKAGEMAKER ?= /Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker
+PACKAGESBUILD=/usr/local/bin/packagesbuild
 PKGDIR=out/dist-osx
 
 release-only:
@@ -323,7 +323,22 @@ release-only:
 		exit 1 ; \
 	fi
 
-$(PKG): release-only
+pre-pkg:
+	touch tools/osx-pkg/scripts/iojs-run-uninstall # empty file for uninstall step
+	cp LICENSE tools/osx-pkg/strings/LICENSE.txt
+	cat tools/osx-pkg/osx-pkg.pkgproj | \
+		sed -e 's|__nodeversion__|'$(FULLVERSION)'|g' | \
+		sed -e 's|introduction.rtf|introduction.out.rtf|g' > \
+		tools/osx-pkg/osx-pkg-out.pkgproj
+	$(foreach dir, \
+		$(shell echo tools/osx-pkg/strings/*/), \
+		cat $(dir)introduction.rtf | \
+		sed -e 's|__nodeversion__|'$(FULLVERSION)'|g' | \
+		sed -e 's|__npmversion__|'$(NPMVERSION)'|g' > \
+		$(dir)introduction.out.rtf; \
+	)
+
+$(PKG): release-only pre-pkg
 	rm -rf $(PKGDIR)
 	rm -rf out/deps out/Release
 	$(PYTHON) ./configure \
@@ -337,10 +352,7 @@ $(PKG): release-only
 		| sed -E "s/\\{nodeversion\\}/$(FULLVERSION)/g" \
 		| sed -E "s/\\{npmversion\\}/$(NPMVERSION)/g" \
 		> tools/osx-pkg.pmdoc/index.xml
-	$(PACKAGEMAKER) \
-		--id "org.node.pkg" \
-		--doc tools/osx-pkg.pmdoc \
-		--out $(PKG)
+	$(PACKAGESBUILD) tools/osx-pkg/osx-pkg-out.pkgproj
 	SIGN="$(PRODUCTSIGN_CERT)" PKG="$(PKG)" bash tools/osx-productsign.sh
 
 pkg: $(PKG)
