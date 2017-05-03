@@ -19,6 +19,8 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include "hessian.h"
+
 #include "node.h"
 #include "node_buffer.h"
 #include "node_constants.h"
@@ -3493,6 +3495,9 @@ void SetupProcessObject(Environment* env,
   env->SetMethod(process, "_setupNextTick", SetupNextTick);
   env->SetMethod(process, "_setupPromises", SetupPromises);
   env->SetMethod(process, "_setupDomainUse", SetupDomainUse);
+
+  env->SetMethod(process, "hessian_encode", hessian_encode);
+  env->SetMethod(process, "hessian_decode", hessian_decode);
 
   // pre-set _events object for faster emit checks
   Local<Object> events_obj = Object::New(env->isolate());

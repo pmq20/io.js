@@ -148,6 +148,7 @@
       ],
 
       'include_dirs': [
+        '../fast-hessian/include',
         'src',
         'tools/msvs/genfiles',
         'deps/uv/src/ares',
@@ -155,6 +156,15 @@
       ],
 
       'sources': [
+        '../fast-hessian/include/hessian.h',
+        '../fast-hessian/include/hessian/encode.h',
+        '../fast-hessian/include/hessian/decode.h',
+        '../fast-hessian/src/hessian.cc',
+        '../fast-hessian/src/hessian_date.cc',
+        '../fast-hessian/src/hessian_int.cc',
+        '../fast-hessian/src/hessian_long.cc',
+        '../fast-hessian/src/hessian_null.cc',
+        '../fast-hessian/src/hessian_string.cc',
         'src/async-wrap.cc',
         'src/cares_wrap.cc',
         'src/connection_wrap.cc',
