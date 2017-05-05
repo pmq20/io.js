@@ -4629,3 +4629,9 @@ int Start(int argc, char** argv) {
 
 
 }  // namespace node
+
+#if !HAVE_INSPECTOR
+static void InitEmptyBindings() {}
+
+NODE_MODULE_CONTEXT_AWARE_BUILTIN(inspector, InitEmptyBindings);
+#endif  // !HAVE_INSPECTOR
