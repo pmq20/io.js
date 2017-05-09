@@ -3500,8 +3500,9 @@ void SetupProcessObject(Environment* env,
   env->SetMethod(process, "_setupPromises", SetupPromises);
   env->SetMethod(process, "_setupDomainUse", SetupDomainUse);
 
-  env->SetMethod(process, "hessian_encode", hessian_encode);
-  env->SetMethod(process, "hessian_decode", hessian_decode);
+	hessian_create_pool(env->isolate());
+	env->SetMethod(process, "hessian_encode", hessian_encode);
+	env->SetMethod(process, "hessian_decode", hessian_decode);
 
   // pre-set _events object for faster emit checks
   Local<Object> events_obj = Object::New(env->isolate());
