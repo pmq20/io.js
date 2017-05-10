@@ -3500,7 +3500,6 @@ void SetupProcessObject(Environment* env,
   env->SetMethod(process, "_setupPromises", SetupPromises);
   env->SetMethod(process, "_setupDomainUse", SetupDomainUse);
 
-	hessian_create_pool(env->isolate());
 	env->SetMethod(process, "hessian_encode", hessian_encode);
 	env->SetMethod(process, "hessian_decode", hessian_decode);
 
